@@ -5,8 +5,8 @@ import java.util.List;
 
 public class Lib {
 
-    public static List<Found> search(File folder) {
-        return null;
+    public static List<Found> search(File folder) throws Exception {
+        return new Search(folder).start();
     }
 
 }
