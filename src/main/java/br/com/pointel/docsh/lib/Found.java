@@ -11,11 +11,24 @@ public class Found {
     public final List<String> contents;
     public final Map<String, List<Integer>> points;
 
-    public Found(File file, String source, List<String> contents, Map<String,List<Integer>> points) {
+    public Found(File file, String source, List<String> contents, Map<String, List<Integer>> points) {
         this.file = file;
         this.source = source;
         this.contents = contents;
         this.points = points;
+    }
+
+    public Integer countPoints() {
+        var result = 0;
+        for (var value : points.values()) {
+            result += value.size();
+        }
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "{ " + file.getName() + " - " + countPoints() + " }";
     }
 
 }
