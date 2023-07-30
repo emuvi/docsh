@@ -2,6 +2,7 @@ package br.com.pointel.docsh.lib;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Search {
@@ -26,6 +27,7 @@ public class Search {
         for (var source : sources) {
             results.add(source.search(words));
         }
+        Collections.sort(results, (a, b) -> b.countPoints().compareTo(a.countPoints()));
         return results;
     }
     
