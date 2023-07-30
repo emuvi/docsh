@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Docsh",
+      "request": "launch",
+      "mainClass": "br.com.pointel.docsh.Docsh",
+      "projectName": "docsh",
+      "args": "--gui"
+    }
+  ]
+}
