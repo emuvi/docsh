@@ -6,11 +6,11 @@ import java.util.List;
 
 public class Search {
 
-    private final File folder;
+    private final File path;
     private final String[] words;
 
-    public Search(File folder, String[] words) {
-        this.folder = folder;
+    public Search(File path, String[] words) {
+        this.path = path;
         this.words = words;
         for (int i = 0; i < words.length; i++) {
             words[i] = Words.getNormalized(words[i]);
@@ -18,7 +18,7 @@ public class Search {
     }
 
     public List<Found> start() throws Exception {
-        var sources = new SourcesLoader(folder).start();
+        var sources = new SourcesLoader(path).start();
         List<Found> results = new ArrayList<>();
         for (var source : sources) {
             results.add(source.search(words));
