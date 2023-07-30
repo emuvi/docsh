@@ -1,6 +1,9 @@
 package br.com.pointel.docsh.gui;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -8,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
@@ -15,7 +19,9 @@ import javax.swing.border.Border;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
 
-public class Gui extends JFrame {
+import br.com.pointel.docsh.lib.Lib;
+
+public class Gui extends JFrame implements ActionListener {
 
     private final JPanel panelRoot = new JPanel(new GridLayout(3, 2));
     private final JLabel labelPath = new JLabel("Path:", JLabel.RIGHT);
@@ -50,6 +56,8 @@ public class Gui extends JFrame {
         labelStatus.setBorder(border);
         
         pack();
+
+        buttonStart.addActionListener(this);
     }
 
     public static void start(String args[]) {
@@ -61,6 +69,31 @@ public class Gui extends JFrame {
         java.awt.EventQueue.invokeLater(() -> {
             new Gui().setVisible(true);
         });
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        buttonStart.setEnabled(false);
+        labelStatus.setText("Searching...");
+        final var path = new File(fieldPath.getText());
+        final var words = fieldSearch.getText();
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    final var founds = Lib.search(path, words);
+                    if (founds.isEmpty()) {
+                        SwingUtilities.invokeLater(() -> labelStatus.setText("None found."));
+                    } else {
+                        SwingUtilities.invokeLater(() -> new Founds(founds).setVisible(true));
+                    }
+                } catch (Exception e) {
+                    SwingUtilities.invokeLater(() -> labelStatus.setText(e.getMessage()));
+                } finally {
+                    SwingUtilities.invokeLater(() -> buttonStart.setEnabled(true));
+                }
+            };
+        }.start();
     }
 
 }

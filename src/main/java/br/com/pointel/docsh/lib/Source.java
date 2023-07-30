@@ -2,9 +2,7 @@ package br.com.pointel.docsh.lib;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Source {
 
@@ -26,15 +24,15 @@ public class Source {
     }
 
     public Found search(List<String> words) {
-        Map<String, List<Integer>> points = new HashMap<>();
+        List<Scored> scores = new ArrayList<>();
         for (var word : words) {
-            var indexes = Words.search(contents, word);
-            if (indexes.isEmpty()) {
+            var points = Words.search(contents, word);
+            if (points.isEmpty()) {
                 return null;
             }
-            points.put(word, indexes);
+            scores.add(new Scored(source, points));
         }
-        return new Found(file, source, contents, points);
+        return new Found(file, source, contents, scores);
     }
 
 }

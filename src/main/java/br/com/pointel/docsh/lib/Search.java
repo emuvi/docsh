@@ -25,10 +25,13 @@ public class Search {
         var sources = new SourcesLoader(path).start();
         List<Found> results = new ArrayList<>();
         for (var source : sources) {
-            results.add(source.search(words));
+            var found = source.search(words);
+            if (found != null) {
+                results.add(found);
+            }
         }
         Collections.sort(results, (a, b) -> b.countPoints().compareTo(a.countPoints()));
         return results;
     }
-    
+
 }
