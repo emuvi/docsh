@@ -1,19 +1,29 @@
 package br.com.pointel.docsh.lib;
 
 import java.text.Normalizer;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Words {
 
-    public static String getNormalized(String str) {
-        str = str.toLowerCase();
-        str = Normalizer.normalize(str, Normalizer.Form.NFD);
-        str = str.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-        str = str.replaceAll("\\W+", "");
-        return str;
+    public static Double DEFAULT_LIMIT = 0.72;
+
+    public static List<Integer> search(List<String> contents, String word) {
+        return search(contents, word, DEFAULT_LIMIT);
+    }
+
+    public static List<Integer> search(List<String> contents, String word, Double limit) {
+        List<Integer> results = new ArrayList<>();
+        for (int i = 0; i < contents.size(); i++) {
+            if (isMatch(contents.get(i), word, limit)) {
+                results.add(i);
+            }
+        }
+        return results;
     }
 
     public static boolean isMatch(String s1, String s2) {
-        return isMatch(s1, s2, 0.72);
+        return isMatch(s1, s2, DEFAULT_LIMIT);
     }
 
     public static boolean isMatch(String s1, String s2, Double limit) {
@@ -58,6 +68,14 @@ public class Words {
             }
         }
         return costs[s2.length()];
+    }
+
+    public static String getNormalized(String str) {
+        str = str.toLowerCase();
+        str = Normalizer.normalize(str, Normalizer.Form.NFD);
+        str = str.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        str = str.replaceAll("\\W+", "");
+        return str;
     }
 
 }

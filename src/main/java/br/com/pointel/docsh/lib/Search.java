@@ -1,14 +1,13 @@
 package br.com.pointel.docsh.lib;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Search {
 
     private final File folder;
     private final String[] words;
-    
-    private List<Source> sources;
 
     public Search(File folder, String[] words) {
         this.folder = folder;
@@ -19,12 +18,12 @@ public class Search {
     }
 
     public List<Found> start() throws Exception {
-        sources = new SourcesLoader(folder).load();
-        return null;
-    }
-
-    public void load(File path) throws Exception {
-
+        var sources = new SourcesLoader(folder).start();
+        List<Found> results = new ArrayList<>();
+        for (var source : sources) {
+            results.add(source.search(words));
+        }
+        return results;
     }
     
 }

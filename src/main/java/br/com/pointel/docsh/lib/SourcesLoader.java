@@ -14,7 +14,7 @@ public class SourcesLoader {
         this.sources = new ArrayList<>();
     }
 
-    public List<Source> load() throws Exception {
+    public List<Source> start() throws Exception {
         load(root);
         return sources;
     }
@@ -27,7 +27,7 @@ public class SourcesLoader {
         } else {
             var text = new Reader(path).load();
             if (text != null && !text.isBlank()) {
-                var source = new Source(path, text);
+                sources.add(new Source(path, text));
             }
         }
     }
