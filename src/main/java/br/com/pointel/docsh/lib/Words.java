@@ -2,7 +2,7 @@ package br.com.pointel.docsh.lib;
 
 import java.text.Normalizer;
 
-public class Utils {
+public class Words {
 
     public static String getNormalized(String str) {
         str = str.toLowerCase();
