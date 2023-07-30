@@ -25,7 +25,7 @@ public class Source {
         }
     }
 
-    public Found search(String[] words) {
+    public Found search(List<String> words) {
         Map<String, List<Integer>> points = new HashMap<>();
         for (var word : words) {
             var indexes = Words.search(contents, word);

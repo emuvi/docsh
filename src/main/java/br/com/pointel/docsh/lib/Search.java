@@ -7,13 +7,16 @@ import java.util.List;
 public class Search {
 
     private final File path;
-    private final String[] words;
+    private final List<String> words;
 
     public Search(File path, String[] words) {
         this.path = path;
-        this.words = words;
+        this.words = new ArrayList<>();
         for (int i = 0; i < words.length; i++) {
-            words[i] = Words.getNormalized(words[i]);
+            var word = Words.getNormalized(words[i]);
+            if (!word.isBlank()) {
+                this.words.add(word);
+            }
         }
     }
 
