@@ -75,6 +75,7 @@ public class GuiFounds extends JFrame {
 
         fieldFounds.addListSelectionListener(e -> selectedFound(e));
         fieldScored.addListSelectionListener(e -> selectedScored(e));
+        fieldMapped.addListSelectionListener(e -> selectedMapped(e));
 
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -111,6 +112,18 @@ public class GuiFounds extends JFrame {
         var scored = fieldScored.getSelectedValue();
         for (var point : scored.points) {
             modelMapped.addElement(point);
+        }
+    }
+
+    private void selectedMapped(ListSelectionEvent e) {
+        if (e.getValueIsAdjusting()) {
+            return;
+        }
+        var mapped = fieldMapped.getSelectedValue();
+        if (mapped != null) {
+            fieldText.setSelectionStart(mapped.start);
+            fieldText.setSelectionEnd(mapped.end);
+            fieldText.requestFocus();
         }
     }
 
