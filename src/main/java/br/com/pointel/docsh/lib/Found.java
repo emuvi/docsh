@@ -7,10 +7,10 @@ public class Found {
 
     public final File file;
     public final String source;
-    public final List<String> contents;
+    public final List<WordMap> contents;
     public final List<Scored> scores;
 
-    public Found(File file, String source, List<String> contents, List<Scored> scores) {
+    public Found(File file, String source, List<WordMap> contents, List<Scored> scores) {
         this.file = file;
         this.source = source;
         this.contents = contents;

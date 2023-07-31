@@ -8,15 +8,15 @@ public class Words {
 
     public static Double DEFAULT_LIMIT = 0.72;
 
-    public static List<Integer> search(List<String> contents, String word) {
+    public static List<WordMap> search(List<WordMap> contents, String word) {
         return search(contents, word, DEFAULT_LIMIT);
     }
 
-    public static List<Integer> search(List<String> contents, String word, Double limit) {
-        List<Integer> results = new ArrayList<>();
-        for (int i = 0; i < contents.size(); i++) {
-            if (isMatch(contents.get(i), word, limit)) {
-                results.add(i);
+    public static List<WordMap> search(List<WordMap> contents, String word, Double limit) {
+        List<WordMap> results = new ArrayList<>();
+        for (var mapped : contents) {
+            if (isMatch(mapped.word, word, limit)) {
+                results.add(mapped);
             }
         }
         return results;
