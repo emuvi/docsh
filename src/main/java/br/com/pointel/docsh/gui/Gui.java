@@ -26,10 +26,10 @@ public class Gui extends JFrame implements ActionListener {
     private final JPanel panelRoot = new JPanel(new GridLayout(3, 2));
     private final JLabel labelPath = new JLabel("Path:", JLabel.RIGHT);
     private final JTextField fieldPath = new JTextField(18);
-    private final JLabel labelSearch = new JLabel("Search:", JLabel.RIGHT);
-    private final JTextField fieldSearch = new JTextField(18);
+    private final JLabel labelWords = new JLabel("Words:", JLabel.RIGHT);
+    private final JTextField fieldWords = new JTextField(18);
     private final JLabel labelStatus = new JLabel("", JLabel.RIGHT);
-    private final JButton buttonStart = new JButton("Start");
+    private final JButton buttonSearch = new JButton("Search");
 
     private final Border border = BorderFactory.createEmptyBorder(9, 9, 9, 9);
 
@@ -45,19 +45,19 @@ public class Gui extends JFrame implements ActionListener {
 
         panelRoot.add(labelPath);
         panelRoot.add(fieldPath);
-        panelRoot.add(labelSearch);
-        panelRoot.add(fieldSearch);
+        panelRoot.add(labelWords);
+        panelRoot.add(fieldWords);
         panelRoot.add(labelStatus);
-        panelRoot.add(buttonStart);
+        panelRoot.add(buttonSearch);
 
         panelRoot.setBorder(border);
         labelPath.setBorder(border);
-        labelSearch.setBorder(border);
+        labelWords.setBorder(border);
         labelStatus.setBorder(border);
 
         pack();
 
-        buttonStart.addActionListener(this);
+        buttonSearch.addActionListener(this);
     }
 
     public static void start(String args[]) {
@@ -73,27 +73,27 @@ public class Gui extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        buttonStart.setEnabled(false);
+        buttonSearch.setEnabled(false);
         labelStatus.setText("Searching...");
         final var path = new File(fieldPath.getText());
-        final var search = fieldSearch.getText();
+        final var words = fieldWords.getText();
         new Thread() {
             @Override
             public void run() {
                 try {
-                    final var founds = Lib.search(path, search);
+                    final var founds = Lib.search(path, words);
                     if (founds.isEmpty()) {
                         SwingUtilities.invokeLater(() -> labelStatus.setText("None found."));
                     } else {
                         SwingUtilities.invokeLater(() -> {
                             labelStatus.setText("Found " + founds.size());
-                            new GuiFounds(search, founds).setVisible(true);
+                            new GuiFounds(words, founds).setVisible(true);
                         });
                     }
                 } catch (Exception e) {
                     SwingUtilities.invokeLater(() -> labelStatus.setText(e.getMessage()));
                 } finally {
-                    SwingUtilities.invokeLater(() -> buttonStart.setEnabled(true));
+                    SwingUtilities.invokeLater(() -> buttonSearch.setEnabled(true));
                 }
             };
         }.start();

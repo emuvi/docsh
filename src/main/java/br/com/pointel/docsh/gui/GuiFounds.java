@@ -45,8 +45,8 @@ public class GuiFounds extends JFrame {
     private final Border borderFields = BorderFactory.createLoweredBevelBorder();
 
 
-    public GuiFounds(String search, List<Found> founds) {
-        super("Docsh - Founds : " + search);
+    public GuiFounds(String words, List<Found> founds) {
+        super("Docsh - Founds : " + words);
         this.modelFounds.addAll(founds);
         initComponents();
     }
@@ -72,6 +72,7 @@ public class GuiFounds extends JFrame {
 
         fieldText.setLineWrap(true);
         fieldText.setWrapStyleWord(true);
+        fieldText.setEditable(false);
         
         pack();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
