@@ -1,7 +1,6 @@
 package br.com.pointel.docsh.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Font;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.List;
@@ -45,14 +44,14 @@ public class GuiFounds extends JFrame {
     private final Border borderFields = BorderFactory.createLoweredBevelBorder();
 
 
-    public GuiFounds(String words, List<Found> founds) {
+    public GuiFounds(JFrame origin, String words, List<Found> founds) {
         super("Docsh - Founds : " + words);
         this.modelFounds.addAll(founds);
+        setLocationRelativeTo(origin);
         initComponents();
     }
 
     private void initComponents() {
-        setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setContentPane(panelRoot);
 
@@ -64,11 +63,10 @@ public class GuiFounds extends JFrame {
 
         panelRoot.add(panelCenter, BorderLayout.CENTER);
 
-        var font = new Font(Font.MONOSPACED, 0, 18);
-        fieldFounds.setFont(font);
-        fieldScored.setFont(font);
-        fieldMapped.setFont(font);
-        fieldText.setFont(font);
+        fieldFounds.setFont(Gui.FONT);
+        fieldScored.setFont(Gui.FONT);
+        fieldMapped.setFont(Gui.FONT);
+        fieldText.setFont(Gui.FONT);
 
         fieldText.setLineWrap(true);
         fieldText.setWrapStyleWord(true);
