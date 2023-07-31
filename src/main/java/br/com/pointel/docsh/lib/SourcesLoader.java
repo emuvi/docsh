@@ -2,9 +2,13 @@ package br.com.pointel.docsh.lib;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SourcesLoader {
+
+    private final static Map<File, Source> CACHED = new HashMap<>(); 
     
     private final File root;
     private final List<Source> sources;
@@ -25,9 +29,16 @@ public class SourcesLoader {
                 load(inside);
             }
         } else {
-            var text = new Reader(path).load();
-            if (text != null && !text.isBlank()) {
-                sources.add(new Source(path, text));
+            var cached = CACHED.get(path);
+            if (cached != null) {
+                sources.add(cached);
+            } else {
+                var text = new Reader(path).load();
+                if (text != null && !text.isBlank()) {
+                    var source = new Source(path, text);
+                    sources.add(source);
+                    CACHED.put(path, source);
+                }
             }
         }
     }

@@ -7,17 +7,17 @@ import java.util.regex.Pattern;
 
 public class Source {
 
-    private final File file;
-    private final String source;
-    private final List<WordMap> contents;
+    public static final Pattern SPACER = Pattern.compile("\\s+");
 
-    private static final Pattern pattern = Pattern.compile("\\s+");
+    public final File file;
+    public final String source;
+    public final List<WordMap> contents;
 
     public Source(File file, String source) {
         this.file = file;
         this.source = source;
         this.contents = new ArrayList<>();
-        var matcher = pattern.matcher(source);
+        var matcher = SPACER.matcher(source);
         var done = 0;
         while (matcher.find()) {
             var start = done;
