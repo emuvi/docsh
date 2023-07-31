@@ -20,7 +20,7 @@ import javax.swing.event.ListSelectionEvent;
 import br.com.pointel.docsh.lib.Found;
 import br.com.pointel.docsh.lib.Scored;
 
-public class Founds extends JFrame {
+public class GuiFounds extends JFrame {
 
     private final JPanel panelRoot = new JPanel(new BorderLayout());
     private final DefaultListModel<Found> modelFounds = new DefaultListModel<>();
@@ -38,7 +38,7 @@ public class Founds extends JFrame {
     private final Border borderFields = BorderFactory.createLoweredBevelBorder();
 
 
-    public Founds(List<Found> founds) {
+    public GuiFounds(List<Found> founds) {
         this.modelFounds.addAll(founds);
         initComponents();
     }

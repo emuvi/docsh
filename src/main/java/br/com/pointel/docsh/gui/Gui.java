@@ -87,7 +87,7 @@ public class Gui extends JFrame implements ActionListener {
                     } else {
                         SwingUtilities.invokeLater(() -> {
                             labelStatus.setText("Found " + founds.size());
-                            new Founds(founds).setVisible(true);
+                            new GuiFounds(founds).setVisible(true);
                         });
                     }
                 } catch (Exception e) {
