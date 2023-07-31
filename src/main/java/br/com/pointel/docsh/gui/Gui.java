@@ -8,6 +8,7 @@ import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -61,8 +62,9 @@ public class Gui extends JFrame implements ActionListener {
 
         pack();
 
-        buttonSearch.addActionListener(this);
         getRootPane().setDefaultButton(buttonSearch);
+        buttonSearch.addActionListener(this);
+        buttonSelect.addActionListener((e) -> selectPath());
     }
 
     public static void start(String args[]) {
@@ -103,6 +105,18 @@ public class Gui extends JFrame implements ActionListener {
                 }
             };
         }.start();
+    }
+
+    private void selectPath() {
+        try {
+            var chooser = new JFileChooser();
+            chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                fieldPath.setText(chooser.getSelectedFile().getAbsolutePath());
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
     }
 
 }
