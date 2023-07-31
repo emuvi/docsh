@@ -42,19 +42,19 @@ public class Gui extends JFrame implements ActionListener {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Docsh");
         setContentPane(panelRoot);
-        
+
         panelRoot.add(labelPath);
         panelRoot.add(fieldPath);
         panelRoot.add(labelSearch);
         panelRoot.add(fieldSearch);
         panelRoot.add(labelStatus);
         panelRoot.add(buttonStart);
-        
+
         panelRoot.setBorder(border);
         labelPath.setBorder(border);
         labelSearch.setBorder(border);
         labelStatus.setBorder(border);
-        
+
         pack();
 
         buttonStart.addActionListener(this);
@@ -85,7 +85,10 @@ public class Gui extends JFrame implements ActionListener {
                     if (founds.isEmpty()) {
                         SwingUtilities.invokeLater(() -> labelStatus.setText("None found."));
                     } else {
-                        SwingUtilities.invokeLater(() -> new Founds(founds).setVisible(true));
+                        SwingUtilities.invokeLater(() -> {
+                            labelStatus.setText("Found " + founds.size());
+                            new Founds(founds).setVisible(true);
+                        });
                     }
                 } catch (Exception e) {
                     SwingUtilities.invokeLater(() -> labelStatus.setText(e.getMessage()));

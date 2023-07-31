@@ -30,7 +30,7 @@ public class Source {
             if (points.isEmpty()) {
                 return null;
             }
-            scores.add(new Scored(source, points));
+            scores.add(new Scored(word, points));
         }
         return new Found(file, source, contents, scores);
     }

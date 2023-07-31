@@ -12,4 +12,9 @@ public class Scored {
         this.points = points;
     }
 
+    @Override
+    public String toString() {
+        return word + " : " + points.size();
+    }
+
 }
