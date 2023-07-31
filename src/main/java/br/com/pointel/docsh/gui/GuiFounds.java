@@ -1,6 +1,7 @@
 package br.com.pointel.docsh.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.List;
@@ -55,6 +56,11 @@ public class GuiFounds extends JFrame {
         scrollText.setBorder(borderFields);
 
         panelRoot.add(panelCenter, BorderLayout.CENTER);
+
+        var font = new Font(Font.MONOSPACED, 0, 18);
+        fieldFounds.setFont(font);
+        fieldScored.setFont(font);
+        fieldText.setFont(font);
         
         pack();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
