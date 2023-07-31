@@ -114,8 +114,10 @@ public class GuiFounds extends JFrame {
         }
         modelMapped.removeAllElements();
         var scored = fieldScored.getSelectedValue();
-        for (var point : scored.points) {
-            modelMapped.addElement(point);
+        if (scored != null) {
+            for (var point : scored.points) {
+                modelMapped.addElement(point);
+            }
         }
     }
 
