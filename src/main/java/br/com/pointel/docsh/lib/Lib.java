@@ -5,8 +5,8 @@ import java.util.List;
 
 public class Lib {
 
-    public static List<Found> search(File path, String words) throws Exception {
-        return new Search(path, words.split("\\s+")).start();
+    public static List<Found> search(File path, String search) throws Exception {
+        return new Search(path, search.split("\\s+")).start();
     }
 
 }

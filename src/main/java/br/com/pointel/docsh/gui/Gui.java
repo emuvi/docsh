@@ -76,18 +76,18 @@ public class Gui extends JFrame implements ActionListener {
         buttonStart.setEnabled(false);
         labelStatus.setText("Searching...");
         final var path = new File(fieldPath.getText());
-        final var words = fieldSearch.getText();
+        final var search = fieldSearch.getText();
         new Thread() {
             @Override
             public void run() {
                 try {
-                    final var founds = Lib.search(path, words);
+                    final var founds = Lib.search(path, search);
                     if (founds.isEmpty()) {
                         SwingUtilities.invokeLater(() -> labelStatus.setText("None found."));
                     } else {
                         SwingUtilities.invokeLater(() -> {
                             labelStatus.setText("Found " + founds.size());
-                            new GuiFounds(founds).setVisible(true);
+                            new GuiFounds(search, founds).setVisible(true);
                         });
                     }
                 } catch (Exception e) {
