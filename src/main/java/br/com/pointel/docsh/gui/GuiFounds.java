@@ -3,6 +3,8 @@ package br.com.pointel.docsh.gui;
 import java.awt.BorderLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -27,7 +29,7 @@ public class GuiFounds extends JFrame {
     private final DefaultListModel<Found> modelFounds = new DefaultListModel<>();
     private final JList<Found> fieldFounds = new JList<>(modelFounds);
     private final JScrollPane scrollFounds = new JScrollPane(fieldFounds);
-    
+
     private final DefaultListModel<Scored> modelScored = new DefaultListModel<>();
     private final JList<Scored> fieldScored = new JList<>(modelScored);
     private final JScrollPane scrollScored = new JScrollPane(fieldScored);
@@ -35,14 +37,13 @@ public class GuiFounds extends JFrame {
     private final JList<WordMap> fieldMapped = new JList<>(modelMapped);
     private final JScrollPane scrollMapped = new JScrollPane(fieldMapped);
     private final JSplitPane panelRight = new JSplitPane(JSplitPane.VERTICAL_SPLIT, scrollScored, scrollMapped);
-    private final JSplitPane panelTop = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollFounds, panelRight); 
+    private final JSplitPane panelTop = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollFounds, panelRight);
     private final JTextArea fieldText = new JTextArea();
     private final JScrollPane scrollText = new JScrollPane(fieldText);
     private final JSplitPane panelCenter = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panelTop, scrollText);
 
     private final Border borderSpace = BorderFactory.createEmptyBorder(9, 9, 9, 9);
     private final Border borderFields = BorderFactory.createLoweredBevelBorder();
-
 
     public GuiFounds(JFrame origin, String words, List<Found> founds) {
         super("Docsh - Founds : " + words);
@@ -71,7 +72,7 @@ public class GuiFounds extends JFrame {
         fieldText.setLineWrap(true);
         fieldText.setWrapStyleWord(true);
         fieldText.setEditable(false);
-        
+
         pack();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
@@ -87,6 +88,33 @@ public class GuiFounds extends JFrame {
                 panelTop.setDividerLocation(width / 2);
                 panelCenter.setDividerLocation(height / 3);
                 panelRight.setDividerLocation(height / 6);
+            }
+        });
+
+        fieldText.addKeyListener(new KeyAdapter() {
+            private boolean isPrior(char c) {
+                return c == '<' || c == ',';
+            }
+
+            private boolean isNext(char c) {
+                return c == '>' || c == '.';
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.isAltDown()) {
+                    if (isPrior(e.getKeyChar())) {
+                        priorScore();
+                    } else if (isNext(e.getKeyChar())) {
+                        nextScore();
+                    }
+                } else if (e.isControlDown()) {
+                    if (isPrior(e.getKeyChar())) {
+                        priorMapped();
+                    } else if (isNext(e.getKeyChar())) {
+                        nextMapped();
+                    }
+                }
             }
         });
     }
@@ -128,6 +156,34 @@ public class GuiFounds extends JFrame {
             fieldText.setSelectionStart(mapped.start);
             fieldText.setSelectionEnd(mapped.end);
             fieldText.requestFocus();
+        }
+    }
+
+    private void priorScore() {
+        var index = fieldScored.getSelectedIndex();
+        if (index > 0) {
+            fieldScored.setSelectedIndex(index - 1);
+        }
+    }
+
+    private void nextScore() {
+        var index = fieldScored.getSelectedIndex();
+        if (index < fieldScored.getModel().getSize() - 1) {
+            fieldScored.setSelectedIndex(index + 1);
+        }
+    }
+
+    private void priorMapped() {
+        var index = fieldMapped.getSelectedIndex();
+        if (index > 0) {
+            fieldMapped.setSelectedIndex(index - 1);
+        }
+    }
+
+    private void nextMapped() {
+        var index = fieldMapped.getSelectedIndex();
+        if (index < fieldMapped.getModel().getSize() - 1) {
+            fieldMapped.setSelectedIndex(index + 1);
         }
     }
 
