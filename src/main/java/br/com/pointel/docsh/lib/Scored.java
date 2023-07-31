@@ -14,7 +14,7 @@ public class Scored {
 
     @Override
     public String toString() {
-        return word + " : " + points.size();
+        return "[ " + word + " : " + points.size() + " ]";
     }
 
 }

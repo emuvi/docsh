@@ -27,7 +27,7 @@ public class Found {
 
     @Override
     public String toString() {
-        return file.getName() + " : " + countPoints();
+        return "{ " + file.getName() + " : " + countPoints() + " }";
     }
 
 }
