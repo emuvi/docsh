@@ -17,7 +17,12 @@ public class Reader {
         } else if (check.endsWith(".pdf")) {
             return new ReaderPDF(file).load();
         } else {
-            return null;
+            var readerMS = new ReaderMS(file);
+            if (readerMS.canExtract()) {
+                return readerMS.extractText();
+            } else {
+                return null;
+            }
         }
     }
 

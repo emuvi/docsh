@@ -19,9 +19,9 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 
-import com.formdev.flatlaf.FlatDarculaLaf;
 
 import br.com.pointel.docsh.lib.Lib;
+import com.formdev.flatlaf.FlatLightLaf;
 
 public class Gui extends JFrame implements ActionListener {
 
@@ -69,7 +69,7 @@ public class Gui extends JFrame implements ActionListener {
 
     public static void start(String args[]) {
         try {
-            UIManager.setLookAndFeel(new FlatDarculaLaf());
+            UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (UnsupportedLookAndFeelException ex) {
             ex.printStackTrace();
         }
