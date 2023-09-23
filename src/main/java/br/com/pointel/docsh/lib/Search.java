@@ -30,7 +30,7 @@ public class Search {
                 results.add(found);
             }
         }
-        Collections.sort(results, (a, b) -> b.countPoints().compareTo(a.countPoints()));
+        Collections.sort(results, (a, b) -> b.ponderScores().compareTo(a.ponderScores()));
         return results;
     }
 

@@ -17,8 +17,8 @@ public class Found {
         this.scores = scores;
     }
 
-    public Integer countPoints() {
-        var result = 0;
+    public Double ponderScores() {
+        var result = 0.0;
         for (var score : scores) {
             result += score.points.size();
         }
@@ -27,7 +27,7 @@ public class Found {
 
     @Override
     public String toString() {
-        return "{ " + file.getName() + " : " + countPoints() + " }";
+        return "{ " + file.getName() + " : " + ponderScores() + " }";
     }
 
 }
