@@ -21,6 +21,7 @@ import javax.swing.event.ListSelectionEvent;
 
 import br.com.pointel.docsh.lib.Found;
 import br.com.pointel.docsh.lib.Scored;
+import br.com.pointel.docsh.lib.WizSwing;
 import br.com.pointel.docsh.lib.WordMap;
 
 public class GuiFounds extends JFrame {
@@ -48,7 +49,6 @@ public class GuiFounds extends JFrame {
     public GuiFounds(JFrame origin, String words, List<Found> founds) {
         super("Docsh - Founds : " + words);
         this.modelFounds.addAll(founds);
-        setLocationRelativeTo(origin);
         initComponents();
     }
 
@@ -74,11 +74,13 @@ public class GuiFounds extends JFrame {
         fieldText.setEditable(false);
 
         pack();
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         fieldFounds.addListSelectionListener(e -> selectedFound(e));
         fieldScored.addListSelectionListener(e -> selectedScored(e));
         fieldMapped.addListSelectionListener(e -> selectedMapped(e));
+        
+        WizSwing.initEscaper(this);
+        WizSwing.initPositioner(this);
 
         addComponentListener(new ComponentAdapter() {
             @Override

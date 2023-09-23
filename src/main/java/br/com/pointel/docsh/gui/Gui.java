@@ -21,6 +21,7 @@ import javax.swing.border.Border;
 
 
 import br.com.pointel.docsh.lib.Lib;
+import br.com.pointel.docsh.lib.WizSwing;
 import com.formdev.flatlaf.FlatLightLaf;
 
 public class Gui extends JFrame implements ActionListener {
@@ -28,7 +29,6 @@ public class Gui extends JFrame implements ActionListener {
     public static final Font FONT = new Font(Font.MONOSPACED, 0, 15);
 
     private final JPanel panelRoot = new JPanel(new FlowLayout(FlowLayout.LEFT, 3, 3));
-    private final JButton buttonCreate = new JButton("+");
     private final JTextField fieldPath = new JTextField(27);
     private final JButton buttonSelect = new JButton("&");
     private final JTextField fieldWords = new JTextField(18);
@@ -41,20 +41,17 @@ public class Gui extends JFrame implements ActionListener {
     }
 
     private void initComponents() {
-        setLocationByPlatform(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Docsh");
         setContentPane(panelRoot);
         setResizable(false);
 
-        panelRoot.add(buttonCreate);
         panelRoot.add(fieldPath);
         panelRoot.add(buttonSelect);
         panelRoot.add(fieldWords);
         panelRoot.add(buttonSearch);
 
         panelRoot.setBorder(border);
-        buttonCreate.setFont(FONT);
         fieldPath.setFont(FONT);
         buttonSelect.setFont(FONT);
         fieldWords.setFont(FONT);
@@ -65,6 +62,8 @@ public class Gui extends JFrame implements ActionListener {
         getRootPane().setDefaultButton(buttonSearch);
         buttonSearch.addActionListener(this);
         buttonSelect.addActionListener((e) -> selectPath());
+        
+        WizSwing.initPositioner(this);
     }
 
     public static void start(String args[]) {
