@@ -20,13 +20,22 @@ import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 
 import br.com.pointel.docsh.lib.Found;
+import br.com.pointel.docsh.lib.Score;
 import br.com.pointel.docsh.lib.Scored;
 import br.com.pointel.docsh.lib.WizSwing;
 import br.com.pointel.docsh.lib.WordMap;
+import java.awt.Desktop;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JTextField;
 
 public class GuiFounds extends JFrame {
 
-    private final JPanel panelRoot = new JPanel(new BorderLayout());
+    private final JPanel panelRoot = new JPanel(new BorderLayout(3, 3));
     private final DefaultListModel<Found> modelFounds = new DefaultListModel<>();
     private final JList<Found> fieldFounds = new JList<>(modelFounds);
     private final JScrollPane scrollFounds = new JScrollPane(fieldFounds);
@@ -34,20 +43,25 @@ public class GuiFounds extends JFrame {
     private final DefaultListModel<Scored> modelScored = new DefaultListModel<>();
     private final JList<Scored> fieldScored = new JList<>(modelScored);
     private final JScrollPane scrollScored = new JScrollPane(fieldScored);
-    private final DefaultListModel<WordMap> modelMapped = new DefaultListModel<>();
-    private final JList<WordMap> fieldMapped = new JList<>(modelMapped);
+    private final DefaultListModel<Score> modelMapped = new DefaultListModel<>();
+    private final JList<Score> fieldMapped = new JList<>(modelMapped);
     private final JScrollPane scrollMapped = new JScrollPane(fieldMapped);
     private final JSplitPane panelRight = new JSplitPane(JSplitPane.VERTICAL_SPLIT, scrollScored, scrollMapped);
     private final JSplitPane panelTop = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollFounds, panelRight);
     private final JTextArea fieldText = new JTextArea();
     private final JScrollPane scrollText = new JScrollPane(fieldText);
     private final JSplitPane panelCenter = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panelTop, scrollText);
+    
+    private final JPanel panelLower = new JPanel(new BorderLayout(3, 3));
+    private final JButton buttonFolder = new JButton("Folder");
+    private final JTextField fieldPath = new JTextField();
+    private final JButton buttonOpen = new JButton("Open");
 
     private final Border borderSpace = BorderFactory.createEmptyBorder(9, 9, 9, 9);
     private final Border borderFields = BorderFactory.createLoweredBevelBorder();
 
     public GuiFounds(JFrame origin, String words, List<Found> founds) {
-        super("Docsh - Founds : " + words);
+        super("Docsh - Founds");
         this.modelFounds.addAll(founds);
         initComponents();
     }
@@ -61,13 +75,24 @@ public class GuiFounds extends JFrame {
         scrollScored.setBorder(borderFields);
         scrollMapped.setBorder(borderFields);
         scrollText.setBorder(borderFields);
-
         panelRoot.add(panelCenter, BorderLayout.CENTER);
+        
+        buttonFolder.addActionListener((e) -> openFolder());
+        fieldPath.setEditable(false);
+        buttonOpen.addActionListener((e) -> openFound());
+        
+        panelLower.add(buttonFolder, BorderLayout.WEST);
+        panelLower.add(fieldPath, BorderLayout.CENTER);
+        panelLower.add(buttonOpen, BorderLayout.EAST);
+        panelRoot.add(panelLower, BorderLayout.SOUTH);
 
         fieldFounds.setFont(Gui.FONT);
         fieldScored.setFont(Gui.FONT);
         fieldMapped.setFont(Gui.FONT);
         fieldText.setFont(Gui.FONT);
+        buttonFolder.setFont(Gui.FONT);
+        fieldPath.setFont(Gui.FONT);
+        buttonOpen.setFont(Gui.FONT);
 
         fieldText.setLineWrap(true);
         fieldText.setWrapStyleWord(true);
@@ -81,6 +106,14 @@ public class GuiFounds extends JFrame {
         
         WizSwing.initEscaper(this);
         WizSwing.initPositioner(this);
+        
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowActivated(WindowEvent e) {
+                fieldFounds.requestFocus();
+                fieldFounds.setSelectedIndex(0);
+            }
+        });
 
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -92,8 +125,10 @@ public class GuiFounds extends JFrame {
                 panelRight.setDividerLocation(height / 6);
             }
         });
-
-        fieldText.addKeyListener(new KeyAdapter() {
+        
+        var thisFrame = this;
+        
+        var shortCuts = new KeyAdapter() {
             private boolean isPrior(char c) {
                 return c == '<' || c == ',';
             }
@@ -104,21 +139,36 @@ public class GuiFounds extends JFrame {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.isAltDown()) {
+                if (e.isShiftDown()) {
+                    if (isPrior(e.getKeyChar())) {
+                        priorFound();
+                    } else if (isNext(e.getKeyChar())) {
+                        nextFound();
+                    }
+                } else if (e.isControlDown()) {
                     if (isPrior(e.getKeyChar())) {
                         priorScore();
                     } else if (isNext(e.getKeyChar())) {
                         nextScore();
                     }
-                } else if (e.isControlDown()) {
+                } else if (e.isAltDown()) {
                     if (isPrior(e.getKeyChar())) {
                         priorMapped();
                     } else if (isNext(e.getKeyChar())) {
                         nextMapped();
                     }
+                } else {
+                    if (e.getExtendedKeyCode() == KeyEvent.VK_ESCAPE) {
+                        WizSwing.close(thisFrame);
+                    }
                 }
             }
-        });
+        };
+
+        fieldFounds.addKeyListener(shortCuts);
+        fieldScored.addKeyListener(shortCuts);
+        fieldMapped.addKeyListener(shortCuts);
+        fieldText.addKeyListener(shortCuts);
     }
 
     private void selectedFound(ListSelectionEvent e) {
@@ -133,7 +183,9 @@ public class GuiFounds extends JFrame {
                 modelScored.addElement(scored);
             }
             fieldText.setText(found.source);
+            fieldPath.setText(found.file.getPath());
         }
+        nextScore();
     }
 
     private void selectedScored(ListSelectionEvent e) {
@@ -147,17 +199,34 @@ public class GuiFounds extends JFrame {
                 modelMapped.addElement(point);
             }
         }
+        nextMapped();
     }
 
     private void selectedMapped(ListSelectionEvent e) {
         if (e.getValueIsAdjusting()) {
             return;
         }
-        var mapped = fieldMapped.getSelectedValue();
-        if (mapped != null) {
-            fieldText.setSelectionStart(mapped.start);
-            fieldText.setSelectionEnd(mapped.end);
+        var score = fieldMapped.getSelectedValue();
+        if (score != null) {
+            fieldText.setSelectionStart(score.wordMap.start);
+            fieldText.setSelectionEnd(score.wordMap.end);
             fieldText.requestFocus();
+        }
+    }
+    
+    private void priorFound() {
+        var index = fieldFounds.getSelectedIndex();
+        if (index > 0) {
+            fieldFounds.setSelectedIndex(index - 1);
+            fieldFounds.ensureIndexIsVisible(fieldFounds.getSelectedIndex());
+        }
+    }
+
+    private void nextFound() {
+        var index = fieldFounds.getSelectedIndex();
+        if (index < fieldFounds.getModel().getSize() - 1) {
+            fieldFounds.setSelectedIndex(index + 1);
+            fieldFounds.ensureIndexIsVisible(fieldFounds.getSelectedIndex());
         }
     }
 
@@ -165,6 +234,7 @@ public class GuiFounds extends JFrame {
         var index = fieldScored.getSelectedIndex();
         if (index > 0) {
             fieldScored.setSelectedIndex(index - 1);
+            fieldScored.ensureIndexIsVisible(fieldScored.getSelectedIndex());
         }
     }
 
@@ -172,6 +242,7 @@ public class GuiFounds extends JFrame {
         var index = fieldScored.getSelectedIndex();
         if (index < fieldScored.getModel().getSize() - 1) {
             fieldScored.setSelectedIndex(index + 1);
+            fieldScored.ensureIndexIsVisible(fieldScored.getSelectedIndex());
         }
     }
 
@@ -179,6 +250,7 @@ public class GuiFounds extends JFrame {
         var index = fieldMapped.getSelectedIndex();
         if (index > 0) {
             fieldMapped.setSelectedIndex(index - 1);
+            fieldMapped.ensureIndexIsVisible(fieldMapped.getSelectedIndex());
         }
     }
 
@@ -186,6 +258,29 @@ public class GuiFounds extends JFrame {
         var index = fieldMapped.getSelectedIndex();
         if (index < fieldMapped.getModel().getSize() - 1) {
             fieldMapped.setSelectedIndex(index + 1);
+            fieldMapped.ensureIndexIsVisible(fieldMapped.getSelectedIndex());
+        }
+    }
+
+    private void openFolder() {
+        var found = fieldFounds.getSelectedValue();
+        if (found != null) {
+            try {
+                Desktop.getDesktop().open(found.file.getParentFile());
+            } catch (IOException ex) {
+                WizSwing.showError(ex);
+            }
+        }
+    }
+
+    private void openFound() {
+        var found = fieldFounds.getSelectedValue();
+        if (found != null) {
+            try {
+                Desktop.getDesktop().open(found.file);
+            } catch (IOException ex) {
+                WizSwing.showError(ex);
+            }
         }
     }
 

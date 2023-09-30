@@ -23,15 +23,20 @@ import javax.swing.border.Border;
 import br.com.pointel.docsh.lib.Lib;
 import br.com.pointel.docsh.lib.WizSwing;
 import com.formdev.flatlaf.FlatLightLaf;
+import java.awt.BorderLayout;
+import javax.swing.JSlider;
 
 public class Gui extends JFrame implements ActionListener {
 
     public static final Font FONT = new Font(Font.MONOSPACED, 0, 15);
 
-    private final JPanel panelRoot = new JPanel(new FlowLayout(FlowLayout.LEFT, 3, 3));
+    private final JPanel panelRoot = new JPanel(new BorderLayout(3, 3));
+    private final JPanel panelUpper = new JPanel(new FlowLayout(FlowLayout.LEFT, 3, 3));
+    private final JPanel panelLower = new JPanel(new FlowLayout(FlowLayout.RIGHT, 3, 3));
     private final JTextField fieldPath = new JTextField(27);
     private final JButton buttonSelect = new JButton("&");
     private final JTextField fieldWords = new JTextField(18);
+    private final JSlider fieldLimit = new JSlider(JSlider.HORIZONTAL, 0, 100, 72);
     private final JButton buttonSearch = new JButton("Search");
 
     private final Border border = BorderFactory.createEmptyBorder(4, 4, 4, 4);
@@ -46,10 +51,13 @@ public class Gui extends JFrame implements ActionListener {
         setContentPane(panelRoot);
         setResizable(false);
 
-        panelRoot.add(fieldPath);
-        panelRoot.add(buttonSelect);
-        panelRoot.add(fieldWords);
-        panelRoot.add(buttonSearch);
+        panelRoot.add(panelUpper, BorderLayout.NORTH);
+        panelRoot.add(panelLower, BorderLayout.SOUTH);
+        panelUpper.add(fieldPath);
+        panelUpper.add(buttonSelect);
+        panelUpper.add(fieldWords);
+        panelLower.add(fieldLimit);
+        panelLower.add(buttonSearch);
 
         panelRoot.setBorder(border);
         fieldPath.setFont(FONT);
@@ -83,11 +91,12 @@ public class Gui extends JFrame implements ActionListener {
         final var origin = this;
         final var path = new File(fieldPath.getText());
         final var words = fieldWords.getText();
+        final var tolerance = fieldLimit.getValue() / 100.00;
         new Thread() {
             @Override
             public void run() {
                 try {
-                    final var founds = Lib.search(path, words);
+                    final var founds = Lib.search(path, words, tolerance);
                     if (founds.isEmpty()) {
                         SwingUtilities.invokeLater(
                                 () -> JOptionPane.showMessageDialog(origin, "None found."));

@@ -9,25 +9,32 @@ public class Found {
     public final String source;
     public final List<WordMap> contents;
     public final List<Scored> scores;
+    public final double penalty;
+    public final Double weighted;
 
-    public Found(File file, String source, List<WordMap> contents, List<Scored> scores) {
+    public Found(File file, String source, List<WordMap> contents, List<Scored> scores, double penalty) {
         this.file = file;
         this.source = source;
         this.contents = contents;
         this.scores = scores;
+        this.penalty = penalty;
+        this.weighted = ponderScores();
     }
 
-    public Double ponderScores() {
+    private Double ponderScores() {
         var result = 0.0;
         for (var score : scores) {
-            result += score.points.size();
+            for(var point : score.points) {
+                result += (100.0 * point.similarity);
+            }
         }
+        result = result - (result * penalty);
         return result;
     }
 
     @Override
     public String toString() {
-        return "{ " + file.getName() + " : " + ponderScores() + " }";
+        return "{ " + file.getName() + " : " + String.format("%.2f", weighted)  + " }";
     }
 
 }

@@ -6,24 +6,25 @@ import java.util.List;
 
 public class Words {
 
-    public static Double DEFAULT_LIMIT = 0.72;
+    public static Double DEFAULT_TOLERANCE = 0.72;
 
-    public static List<WordMap> search(List<WordMap> contents, String word) {
-        return search(contents, word, DEFAULT_LIMIT);
+    public static List<Score> search(List<WordMap> contents, String word) {
+        return search(contents, word, DEFAULT_TOLERANCE);
     }
 
-    public static List<WordMap> search(List<WordMap> contents, String word, Double limit) {
-        List<WordMap> results = new ArrayList<>();
+    public static List<Score> search(List<WordMap> contents, String word, Double tolerance) {
+        List<Score> results = new ArrayList<>();
         for (var mapped : contents) {
-            if (isMatch(mapped.word, word, limit)) {
-                results.add(mapped);
+            var similarity = getSimilarity(mapped.word, word);
+            if (similarity > tolerance) {
+                results.add(new Score(mapped, similarity));
             }
         }
         return results;
     }
 
     public static boolean isMatch(String s1, String s2) {
-        return isMatch(s1, s2, DEFAULT_LIMIT);
+        return isMatch(s1, s2, DEFAULT_TOLERANCE);
     }
 
     public static boolean isMatch(String s1, String s2, Double limit) {
