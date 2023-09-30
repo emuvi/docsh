@@ -23,13 +23,10 @@ import br.com.pointel.docsh.lib.Found;
 import br.com.pointel.docsh.lib.Score;
 import br.com.pointel.docsh.lib.Scored;
 import br.com.pointel.docsh.lib.WizSwing;
-import br.com.pointel.docsh.lib.WordMap;
 import java.awt.Desktop;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 
@@ -108,10 +105,15 @@ public class GuiFounds extends JFrame {
         WizSwing.initPositioner(this);
         
         addWindowListener(new WindowAdapter() {
+            boolean firstActivation = true;
+            
             @Override
             public void windowActivated(WindowEvent e) {
-                fieldFounds.requestFocus();
-                fieldFounds.setSelectedIndex(0);
+                if (firstActivation) {
+                    firstActivation = false;
+                    fieldFounds.requestFocus();
+                    fieldFounds.setSelectedIndex(0);
+                }
             }
         });
 

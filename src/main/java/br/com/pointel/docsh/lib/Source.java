@@ -64,7 +64,6 @@ public class Source {
             penalty = (double) allDistance / (double) source.length();
             if (penalty > 1) { 
                 penalty = 1;
-                WizSwing.showError(new Exception("Penalty bigger than 1 in " + file.getName()));
             }
         }
         return new Found(file, source, contents, scores, penalty);

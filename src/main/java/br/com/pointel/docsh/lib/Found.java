@@ -25,7 +25,7 @@ public class Found {
         var result = 0.0;
         for (var score : scores) {
             for(var point : score.points) {
-                result += (100.0 * point.similarity);
+                result += point.similarity;
             }
         }
         result = result - (result * penalty);
